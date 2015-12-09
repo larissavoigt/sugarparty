@@ -2,10 +2,16 @@ package auth
 
 import "net/http"
 
-func SaveSession(w http.ResponseWriter, password string) {
+var password = ""
+
+func SetPassword(passwd string) {
+	password = passwd
+}
+
+func SaveSession(w http.ResponseWriter, passwd string) {
 	cookie := &http.Cookie{
 		Name:     "password",
-		Value:    password,
+		Value:    passwd,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)
@@ -20,7 +26,7 @@ func DestroySession(w http.ResponseWriter) {
 	http.SetCookie(w, cookie)
 }
 
-func Admin(r *http.Request, password string) bool {
+func Logged(r *http.Request) bool {
 	cookie, err := r.Cookie("password")
 	if err == nil {
 		return password == cookie.Value

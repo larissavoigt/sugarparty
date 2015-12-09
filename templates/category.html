@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{{.Category.Name}} Festa do Açúcar</title>
+  </head>
+  <body>
+    <h1>{{.Category.Name}}</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Preço</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range .Products }}
+          <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Description}}</td>
+            <td>R$ {{.Price | printf "%.2f" }}</td>
+            <td><a href="/order/add?id={{.ID}}">Adicionar</a></td>
+          </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </body>
+</html>

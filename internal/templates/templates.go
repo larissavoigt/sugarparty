@@ -9,6 +9,8 @@ type Templates struct {
 	*template.Template
 }
 
+var tpl = New("templates")
+
 func New(path string) *Templates {
 	t := template.New(path)
 	template.Must(t.ParseGlob(path + "/*.html"))
@@ -22,12 +24,16 @@ func (t *Templates) Render(w http.ResponseWriter, name string, data interface{})
 	}
 }
 
-func (t *Templates) NotFound(w http.ResponseWriter) {
-	w.WriteHeader(http.StatusNotFound)
-	t.Render(w, "404", nil)
+func Render(w http.ResponseWriter, name string, data interface{}) {
+	tpl.Render(w, name, data)
 }
 
-func (t *Templates) Error(w http.ResponseWriter, err error) {
+func NotFound(w http.ResponseWriter) {
+	w.WriteHeader(http.StatusNotFound)
+	tpl.Render(w, "404", nil)
+}
+
+func Error(w http.ResponseWriter, err error) {
 	w.WriteHeader(http.StatusInternalServerError)
-	t.Render(w, "500", err)
+	tpl.Render(w, "500", err)
 }

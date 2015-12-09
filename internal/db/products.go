@@ -26,12 +26,24 @@ func FindProduct(id string) (*product.Product, error) {
 }
 
 func AllProducts() (products []product.Product, err error) {
-	rows, err := db.Query(`
+	return scanProducts(`
 	SELECT p.id, p.name, p.description, p.price, p.active, c.name
 	FROM products p
 	INNER JOIN categories c
 	ON p.category_id = c.id
 	`)
+}
+
+func ActiveProducts(id string) (products []product.Product, err error) {
+	return scanProducts(`
+	SELECT id, name, description, price, active, ''
+	FROM products
+	WHERE category_id = ? AND active IS TRUE
+	`, id)
+}
+
+func scanProducts(query string, args ...interface{}) (products []product.Product, err error) {
+	rows, err := db.Query(query, args...)
 
 	if err != nil {
 		return products, err
