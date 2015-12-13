@@ -8,16 +8,20 @@ func SetPassword(passwd string) {
 	password = passwd
 }
 
-func SaveSession(w http.ResponseWriter, passwd string) {
+func Login(w http.ResponseWriter, passwd string) (logged bool) {
+	if passwd != password {
+		return false
+	}
 	cookie := &http.Cookie{
 		Name:     "password",
 		Value:    passwd,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)
+	return true
 }
 
-func DestroySession(w http.ResponseWriter) {
+func Logout(w http.ResponseWriter) {
 	cookie := &http.Cookie{
 		Name:     "password",
 		MaxAge:   -1,

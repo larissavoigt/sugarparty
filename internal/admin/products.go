@@ -4,12 +4,37 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/luizbranco/sugarparty/internal/auth"
 	"github.com/luizbranco/sugarparty/internal/db"
 	"github.com/luizbranco/sugarparty/internal/product"
 	"github.com/luizbranco/sugarparty/internal/templates"
 )
 
-func AllProducts(w http.ResponseWriter) {
+func products(w http.ResponseWriter, r *http.Request) {
+	if !auth.Logged(r) {
+		http.Redirect(w, r, "/admin/login", http.StatusFound)
+		return
+	}
+
+	id := r.URL.Path[len("/admin/products/"):]
+	switch r.Method {
+	case "GET":
+		switch id {
+		case "":
+			indexProducts(w)
+		case "new":
+			newProduct(w)
+		default:
+			showProduct(w, id)
+		}
+	case "POST":
+		createProduct(w, r, id)
+	default:
+		http.Error(w, "", http.StatusMethodNotAllowed)
+	}
+}
+
+func indexProducts(w http.ResponseWriter) {
 	products, err := db.AllProducts()
 	if err != nil {
 		templates.Error(w, err)
@@ -18,7 +43,7 @@ func AllProducts(w http.ResponseWriter) {
 	}
 }
 
-func Product(w http.ResponseWriter, id string) {
+func showProduct(w http.ResponseWriter, id string) {
 	p, err := db.FindProduct(id)
 	if err != nil {
 		templates.Error(w, err)
@@ -39,7 +64,7 @@ func Product(w http.ResponseWriter, id string) {
 	tpl.Render(w, "product", content)
 }
 
-func NewProduct(w http.ResponseWriter) {
+func newProduct(w http.ResponseWriter) {
 	c, err := db.AllCategories()
 	if err != nil {
 		templates.Error(w, err)
@@ -55,7 +80,7 @@ func NewProduct(w http.ResponseWriter) {
 	tpl.Render(w, "product", content)
 }
 
-func CreateProduct(w http.ResponseWriter, r *http.Request, id string) {
+func createProduct(w http.ResponseWriter, r *http.Request, id string) {
 	var err error
 	price, err := strconv.ParseFloat(r.FormValue("price"), 64)
 	if err != nil {

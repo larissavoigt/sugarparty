@@ -7,6 +7,9 @@
   </head>
   <body>
     <h1>Admin Login</h1>
+    {{if .}}
+      <h3>{{.}}</h3>
+    {{end}}
     <form action="/admin/login" method="post">
       <div>
         <label for="password">Password</label>

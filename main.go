@@ -28,20 +28,22 @@ func main() {
 	fs := http.FileServer(http.Dir("assets"))
 	http.Handle("/assets/", http.StripPrefix("/assets/", fs))
 
-	mux := admin.NewServeMux()
-	http.Handle("/admin/", mux)
+	http.Handle("/admin/", admin.NewServeMux())
+	http.HandleFunc("/cart/", cart.Handler)
 
 	http.HandleFunc("/categories/", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			http.Error(w, "", http.StatusMethodNotAllowed)
+			return
 		}
 
 		id := r.URL.Path[len("/categories/"):]
 		if id == "" {
 			templates.NotFound(w)
+			return
 		}
 
-		c, err := db.FindCategory(id)
+		cat, err := db.FindCategory(id)
 		if err != nil {
 			templates.Error(w, err)
 		}
@@ -52,40 +54,37 @@ func main() {
 		content := struct {
 			Category *product.Category
 			Products []product.Product
+			Cart     *cart.Cart
 		}{
-			c,
+			cat,
 			p,
+			cart.New(r),
 		}
 		templates.Render(w, "category", content)
 	})
 
-	http.HandleFunc("/order", func(w http.ResponseWriter, r *http.Request) {
-		switch r.Method {
-		case "GET":
-			c := cart.New(r)
-			templates.Render(w, "order", c)
-		case "POST":
-			http.Redirect(w, r, "/received", http.StatusFound)
-		default:
-			http.Error(w, "", http.StatusMethodNotAllowed)
-		}
-	})
-
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "GET" {
-			if r.URL.Path != "/" {
-				templates.NotFound(w)
-				return
-			}
-			categories, err := db.ActiveCategories()
-			if err != nil {
-				templates.Error(w, err)
-			} else {
-				templates.Render(w, "index", categories)
-			}
-		} else {
+		if r.Method != "GET" {
 			http.Error(w, "", http.StatusMethodNotAllowed)
+			return
 		}
+		if r.URL.Path != "/" {
+			templates.NotFound(w)
+			return
+		}
+		cat, err := db.ActiveCategories()
+		if err != nil {
+			templates.Error(w, err)
+			return
+		}
+		content := struct {
+			Categories []product.Category
+			Cart       *cart.Cart
+		}{
+			cat,
+			cart.New(r),
+		}
+		templates.Render(w, "index", content)
 	})
 
 	log.Fatal(http.ListenAndServe(":"+*port, nil))

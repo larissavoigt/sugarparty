@@ -7,10 +7,12 @@ import (
 	"strings"
 )
 
-type Cart map[string]int
+type Cart struct {
+	items map[string]int
+}
 
-func New(r *http.Request) Cart {
-	c := make(map[string]int)
+func New(r *http.Request) *Cart {
+	c := &Cart{items: make(map[string]int)}
 	cookie, err := r.Cookie("cart")
 	if err != nil {
 		return c
@@ -23,24 +25,24 @@ func New(r *http.Request) Cart {
 	for i := 0; i < len(items); i += 2 {
 		n, err := strconv.Atoi(items[i+1])
 		if err == nil {
-			c[items[i]] = n
+			c.Add(items[i], n)
 		}
 	}
 
 	return c
 }
 
-func (c Cart) Add(id string, qty int) {
-	c[id] = qty
+func (c *Cart) Add(id string, qty int) {
+	c.items[id] = qty
 }
 
-func (c Cart) Remove(id string) {
-	delete(c, id)
+func (c *Cart) Remove(id string) {
+	delete(c.items, id)
 }
 
-func (c Cart) MarshalText() (text []byte, err error) {
+func (c *Cart) MarshalText() (text []byte, err error) {
 	var buf bytes.Buffer
-	for k, v := range c {
+	for k, v := range c.items {
 		_, err = buf.WriteString(k + " " + strconv.Itoa(v) + " ")
 		if err != nil {
 			return nil, err
@@ -49,7 +51,7 @@ func (c Cart) MarshalText() (text []byte, err error) {
 	return buf.Bytes(), nil
 }
 
-func (c Cart) Save(w http.ResponseWriter) {
+func (c *Cart) Save(w http.ResponseWriter) {
 	val, _ := c.MarshalText()
 	cookie := &http.Cookie{
 		Name:     "cart",
@@ -57,4 +59,8 @@ func (c Cart) Save(w http.ResponseWriter) {
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)
+}
+
+func (c *Cart) Total() error {
+	return nil
 }
