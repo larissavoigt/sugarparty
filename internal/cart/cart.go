@@ -1,14 +1,26 @@
 package cart
 
 import (
-	"bytes"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
+
+	"github.com/luizbranco/sugarparty/internal/db"
+	"github.com/luizbranco/sugarparty/internal/product"
 )
 
 type Cart struct {
 	items map[string]int
+	Items []Item
+	Qty   int
+	Price float64
+}
+
+type Item struct {
+	product.Product
+	Qty   int
+	Price float64
 }
 
 func New(r *http.Request) *Cart {
@@ -22,40 +34,49 @@ func New(r *http.Request) *Cart {
 		return c
 	}
 
+	var keys []interface{}
+
 	for i := 0; i < len(items); i += 2 {
 		n, err := strconv.Atoi(items[i+1])
 		if err == nil {
-			c.Add(items[i], n)
+			k := items[i]
+			keys = append(keys, k)
+			c.Add(k, n)
 		}
+	}
+
+	products, _ := db.FindProducts(keys)
+	c.Items = make([]Item, 0, len(products))
+	for _, p := range products {
+		qty := c.items[p.ID]
+		price := p.Price * float64(qty)
+		i := Item{p, qty, price}
+		c.Qty += qty
+		c.Price += price
+		c.Items = append(c.Items, i)
 	}
 
 	return c
 }
 
 func (c *Cart) Add(id string, qty int) {
-	c.items[id] = qty
+	c.items[id] += qty
 }
 
 func (c *Cart) Remove(id string) {
 	delete(c.items, id)
 }
 
-func (c *Cart) MarshalText() (text []byte, err error) {
-	var buf bytes.Buffer
-	for k, v := range c.items {
-		_, err = buf.WriteString(k + " " + strconv.Itoa(v) + " ")
-		if err != nil {
-			return nil, err
-		}
-	}
-	return buf.Bytes(), nil
-}
-
 func (c *Cart) Save(w http.ResponseWriter) {
-	val, _ := c.MarshalText()
+	var val []string
+	for k, v := range c.items {
+		val = append(val, k, strconv.Itoa(v))
+	}
 	cookie := &http.Cookie{
+		Path:     "/",
 		Name:     "cart",
-		Value:    string(val),
+		Value:    strings.Join(val, " "),
+		Expires:  time.Now().Add(7 * 24 * time.Hour),
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)

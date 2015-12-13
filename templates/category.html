@@ -22,10 +22,16 @@
             <td>{{.Name}}</td>
             <td>{{.Description}}</td>
             <td>R$ {{.Price | printf "%.2f" }}</td>
-            <td><a href="/order/add?id={{.ID}}">Adicionar</a></td>
+            <td>
+              <form action="/cart/" method="post">
+                <input type="hidden" name="id" value="{{.ID}}" />
+                <button type="submit">Adicionar</button>
+              </form>
+            </td>
           </tr>
         {{ end }}
       </tbody>
     </table>
+    {{template "cart" .}}
   </body>
 </html>

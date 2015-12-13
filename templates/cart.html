@@ -1,5 +1,32 @@
 {{define "cart"}}
 <div>
-  <h3>Carrinho</h3>
+  {{if .Cart.Items}}
+    <h3>Carrinho</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Produto</th>
+          <th>Qtd</th>
+          <th>Preço</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Cart.Items}}
+        <tr>
+          <td>{{.Name}}</td>
+          <td>{{.Qty}}</td>
+          <td>R$ {{.Price | printf "%.2f" }}</td>
+        </tr>
+        {{end}}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>Total</td>
+          <td>{{.Cart.Qty}}</td>
+          <td>R$ {{.Cart.Price | printf "%.2f" }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  {{end}}
 </div>
 {{end}}

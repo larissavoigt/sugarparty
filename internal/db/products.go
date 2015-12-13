@@ -1,6 +1,11 @@
 package db
 
-import "github.com/luizbranco/sugarparty/internal/product"
+import (
+	"fmt"
+	"strings"
+
+	"github.com/luizbranco/sugarparty/internal/product"
+)
 
 func CreateProduct(p *product.Product) error {
 	_, err := db.Exec(`
@@ -25,7 +30,18 @@ func FindProduct(id string) (*product.Product, error) {
 	return p, err
 }
 
-func AllProducts() (products []product.Product, err error) {
+func FindProducts(ids []interface{}) ([]product.Product, error) {
+	args := strings.Repeat("?,", len(ids))
+	q := fmt.Sprintf(`SELECT p.id, p.name, p.description, p.price, p.active, c.name
+	FROM products p
+	INNER JOIN categories c
+	ON p.category_id = c.id
+	WHERE p.id IN (%s)
+	`, args[:len(args)-1])
+	return scanProducts(q, ids...)
+}
+
+func AllProducts() ([]product.Product, error) {
 	return scanProducts(`
 	SELECT p.id, p.name, p.description, p.price, p.active, c.name
 	FROM products p
@@ -34,7 +50,7 @@ func AllProducts() (products []product.Product, err error) {
 	`)
 }
 
-func ActiveProducts(id string) (products []product.Product, err error) {
+func ActiveProducts(id string) ([]product.Product, error) {
 	return scanProducts(`
 	SELECT id, name, description, price, active, ''
 	FROM products
