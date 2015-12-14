@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    {{template "head"}}
     <title>Pedido - Festa do Açúcar</title>
   </head>
   <body>
-    <h1>Pedido</h1>
-    {{ if . }}
-      <ul>
-        {{ range $key, $value := . }}
-          <li>{{ $key }} : {{ $value }}</li>
-        {{ end }}
-      </ul>
-    {{ else }}
-      <p>Pedido Vazio</p>
-    {{ end }}
+    <h1>Finalizar Pedido</h1>
+    {{if .Error}}
+      {{.Error}}
+    {{end}}
+    <form action="/orders/" method="post">
+      <div>
+        <label for="name">Nome</label>
+        <input type="text" name="name" value="" required />
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" value="" required />
+      </div>
+      <div>
+        <label for="phone">Telefone</label>
+        <input type="phone" name="phone" value="" required />
+      </div>
+      <div>
+        <label for="message">Messagem</label>
+        <textarea name="message" rows="8" cols="40" required></textarea>
+      </div>
+      <button type="submit">Enviar Pedido</button>
+    </form>
+    {{template "cart" .}}
   </body>
 </html>

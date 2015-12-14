@@ -9,6 +9,7 @@ import (
 	"github.com/luizbranco/sugarparty/internal/controllers/cart"
 	"github.com/luizbranco/sugarparty/internal/controllers/categories"
 	"github.com/luizbranco/sugarparty/internal/controllers/home"
+	"github.com/luizbranco/sugarparty/internal/controllers/orders"
 	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
 )
 
@@ -30,6 +31,7 @@ func main() {
 	http.Handle("/admin/", admin.NewServeMux())
 	http.HandleFunc("/cart/", cart.Handler)
 	http.HandleFunc("/categories/", categories.Handler)
+	http.HandleFunc("/orders/", orders.Handler)
 	http.HandleFunc("/", home.Handler)
 
 	log.Fatal(http.ListenAndServe(":"+*port, nil))

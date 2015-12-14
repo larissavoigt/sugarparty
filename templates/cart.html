@@ -15,7 +15,7 @@
         {{range .Cart.Items}}
         <tr>
           <td>{{.Name}}</td>
-          <td>{{.Qty}}</td>
+          <td>{{.Quantity}}</td>
           <td>R$ {{.Price | printf "%.2f" }}</td>
           <td>
             <form method="post">
@@ -31,11 +31,14 @@
       <tfoot>
         <tr>
           <td>Total</td>
-          <td>{{.Cart.Qty}}</td>
+          <td>{{.Cart.Quantity}}</td>
           <td>R$ {{.Cart.Price | printf "%.2f" }}</td>
         </tr>
       </tfoot>
     </table>
+    {{if not .Cart.Ready}}
+    <a href="/orders/">Finalizar Pedido</a>
+    {{end}}
   {{end}}
 </div>
 {{end}}

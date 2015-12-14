@@ -8,16 +8,17 @@ import (
 )
 
 type Cart struct {
-	items map[string]int
-	Items []CartItem
-	Qty   int
-	Price float64
+	items    map[string]int
+	Items    []CartItem
+	Quantity int
+	Price    float64
+	Ready    bool
 }
 
 type CartItem struct {
 	Product
-	Qty   int
-	Price float64
+	Quantity int
+	Price    float64
 }
 
 func NewCart(r *http.Request) *Cart {
@@ -48,7 +49,7 @@ func NewCart(r *http.Request) *Cart {
 		qty := c.items[p.ID]
 		price := p.Price * float64(qty)
 		i := CartItem{p, qty, price}
-		c.Qty += qty
+		c.Quantity += qty
 		c.Price += price
 		c.Items = append(c.Items, i)
 	}
@@ -79,6 +80,16 @@ func (c *Cart) Save(w http.ResponseWriter) {
 		Name:     "cart",
 		Value:    strings.Join(val, " "),
 		Expires:  time.Now().Add(7 * 24 * time.Hour),
+		HttpOnly: true,
+	}
+	http.SetCookie(w, cookie)
+}
+
+func (c *Cart) Destroy(w http.ResponseWriter) {
+	cookie := &http.Cookie{
+		Path:     "/",
+		Name:     "cart",
+		MaxAge:   -1,
 		HttpOnly: true,
 	}
 	http.SetCookie(w, cookie)

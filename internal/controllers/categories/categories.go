@@ -37,5 +37,4 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		models.NewCart(r),
 	}
 	views.Render(w, "category", content)
-
 }
