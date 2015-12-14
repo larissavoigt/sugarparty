@@ -8,8 +8,7 @@ import (
 	"github.com/luizbranco/sugarparty/internal/admin"
 	"github.com/luizbranco/sugarparty/internal/auth"
 	"github.com/luizbranco/sugarparty/internal/cart"
-	"github.com/luizbranco/sugarparty/internal/db"
-	"github.com/luizbranco/sugarparty/internal/product"
+	"github.com/luizbranco/sugarparty/internal/models"
 	"github.com/luizbranco/sugarparty/internal/templates"
 )
 
@@ -43,17 +42,17 @@ func main() {
 			return
 		}
 
-		cat, err := db.FindCategory(id)
+		cat, err := models.FindCategory(id)
 		if err != nil {
 			templates.Error(w, err)
 		}
-		p, err := db.ActiveProducts(id)
+		p, err := models.ActiveProducts(id)
 		if err != nil {
 			templates.Error(w, err)
 		}
 		content := struct {
-			Category *product.Category
-			Products []product.Product
+			Category *models.Category
+			Products []models.Product
 			Cart     *cart.Cart
 		}{
 			cat,
@@ -72,13 +71,13 @@ func main() {
 			templates.NotFound(w)
 			return
 		}
-		cat, err := db.ActiveCategories()
+		cat, err := models.ActiveCategories()
 		if err != nil {
 			templates.Error(w, err)
 			return
 		}
 		content := struct {
-			Categories []product.Category
+			Categories []models.Category
 			Cart       *cart.Cart
 		}{
 			cat,

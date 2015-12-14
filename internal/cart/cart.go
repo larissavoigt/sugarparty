@@ -6,8 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/luizbranco/sugarparty/internal/db"
-	"github.com/luizbranco/sugarparty/internal/product"
+	"github.com/luizbranco/sugarparty/internal/models"
 )
 
 type Cart struct {
@@ -18,7 +17,7 @@ type Cart struct {
 }
 
 type Item struct {
-	product.Product
+	models.Product
 	Qty   int
 	Price float64
 }
@@ -45,7 +44,7 @@ func New(r *http.Request) *Cart {
 		}
 	}
 
-	products, _ := db.FindProducts(keys)
+	products, _ := models.FindProducts(keys)
 	c.Items = make([]Item, 0, len(products))
 	for _, p := range products {
 		qty := c.items[p.ID]

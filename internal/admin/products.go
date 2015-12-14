@@ -5,8 +5,7 @@ import (
 	"strconv"
 
 	"github.com/luizbranco/sugarparty/internal/auth"
-	"github.com/luizbranco/sugarparty/internal/db"
-	"github.com/luizbranco/sugarparty/internal/product"
+	"github.com/luizbranco/sugarparty/internal/models"
 	"github.com/luizbranco/sugarparty/internal/templates"
 )
 
@@ -35,7 +34,7 @@ func products(w http.ResponseWriter, r *http.Request) {
 }
 
 func indexProducts(w http.ResponseWriter) {
-	products, err := db.AllProducts()
+	products, err := models.AllProducts()
 	if err != nil {
 		templates.Error(w, err)
 	} else {
@@ -44,19 +43,19 @@ func indexProducts(w http.ResponseWriter) {
 }
 
 func showProduct(w http.ResponseWriter, id string) {
-	p, err := db.FindProduct(id)
+	p, err := models.FindProduct(id)
 	if err != nil {
 		templates.Error(w, err)
 		return
 	}
-	c, err := db.AllCategories()
+	c, err := models.AllCategories()
 	if err != nil {
 		templates.Error(w, err)
 		return
 	}
 	content := struct {
-		Categories []product.Category
-		Product    *product.Product
+		Categories []models.Category
+		Product    *models.Product
 	}{
 		c,
 		p,
@@ -65,17 +64,17 @@ func showProduct(w http.ResponseWriter, id string) {
 }
 
 func newProduct(w http.ResponseWriter) {
-	c, err := db.AllCategories()
+	c, err := models.AllCategories()
 	if err != nil {
 		templates.Error(w, err)
 		return
 	}
 	content := struct {
-		Categories []product.Category
-		Product    *product.Product
+		Categories []models.Category
+		Product    *models.Product
 	}{
 		c,
-		&product.Product{},
+		&models.Product{},
 	}
 	tpl.Render(w, "product", content)
 }
@@ -86,18 +85,18 @@ func createProduct(w http.ResponseWriter, r *http.Request, id string) {
 	if err != nil {
 		price = 0
 	}
-	p := &product.Product{
+	p := &models.Product{
 		ID:          r.FormValue("id"),
 		Name:        r.FormValue("name"),
 		Description: r.FormValue("description"),
 		Price:       price,
 		Active:      r.FormValue("active") != "",
-		Category:    product.Category{ID: r.FormValue("category_id")},
+		Category:    models.Category{ID: r.FormValue("category_id")},
 	}
 	if id == "" {
-		err = db.CreateProduct(p)
+		err = models.CreateProduct(p)
 	} else {
-		err = db.UpdateProduct(p)
+		err = models.UpdateProduct(p)
 	}
 	if err != nil {
 		templates.Error(w, err)

@@ -1,28 +1,35 @@
-package db
+package models
 
 import (
 	"fmt"
 	"strings"
-
-	"github.com/luizbranco/sugarparty/internal/product"
 )
 
-func CreateProduct(p *product.Product) error {
+type Product struct {
+	ID          string
+	Name        string
+	Description string
+	Price       float64
+	Active      bool
+	Category
+}
+
+func CreateProduct(p *Product) error {
 	_, err := db.Exec(`
 	INSERT INTO products (name, description, price, active, category_id)
 	VALUES(?, ?, ?, ?, ?)`, p.Name, p.Description, p.Price, p.Active, p.Category.ID)
 	return err
 }
 
-func UpdateProduct(p *product.Product) error {
+func UpdateProduct(p *Product) error {
 	_, err := db.Exec(`
 	UPDATE products SET name=?, description=?, price=?, active=?, category_id=?
 	where id = ?`, p.Name, p.Description, p.Price, p.Active, p.Category.ID, p.ID)
 	return err
 }
 
-func FindProduct(id string) (*product.Product, error) {
-	p := &product.Product{}
+func FindProduct(id string) (*Product, error) {
+	p := &Product{}
 	err := db.QueryRow(`
 	SELECT id, name, description, price, active, category_id
 	FROM products WHERE id=?`, id).Scan(
@@ -30,7 +37,7 @@ func FindProduct(id string) (*product.Product, error) {
 	return p, err
 }
 
-func FindProducts(ids []interface{}) ([]product.Product, error) {
+func FindProducts(ids []interface{}) ([]Product, error) {
 	args := strings.Repeat("?,", len(ids))
 	q := fmt.Sprintf(`SELECT p.id, p.name, p.description, p.price, p.active, c.name
 	FROM products p
@@ -41,7 +48,7 @@ func FindProducts(ids []interface{}) ([]product.Product, error) {
 	return scanProducts(q, ids...)
 }
 
-func AllProducts() ([]product.Product, error) {
+func AllProducts() ([]Product, error) {
 	return scanProducts(`
 	SELECT p.id, p.name, p.description, p.price, p.active, c.name
 	FROM products p
@@ -50,7 +57,7 @@ func AllProducts() ([]product.Product, error) {
 	`)
 }
 
-func ActiveProducts(id string) ([]product.Product, error) {
+func ActiveProducts(id string) ([]Product, error) {
 	return scanProducts(`
 	SELECT id, name, description, price, active, ''
 	FROM products
@@ -58,7 +65,7 @@ func ActiveProducts(id string) ([]product.Product, error) {
 	`, id)
 }
 
-func scanProducts(query string, args ...interface{}) (products []product.Product, err error) {
+func scanProducts(query string, args ...interface{}) (products []Product, err error) {
 	rows, err := db.Query(query, args...)
 
 	if err != nil {
@@ -66,7 +73,7 @@ func scanProducts(query string, args ...interface{}) (products []product.Product
 	}
 	defer rows.Close()
 	for rows.Next() {
-		p := product.Product{}
+		p := Product{}
 		err = rows.Scan(&p.ID, &p.Name, &p.Description, &p.Price, &p.Active, &p.Category.Name)
 		if err != nil {
 			return products, err

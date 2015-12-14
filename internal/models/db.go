@@ -1,11 +1,10 @@
-package db
+package models
 
 import (
 	"database/sql"
 
-	"github.com/luizbranco/sugarparty/internal/order"
+	_ "github.com/go-sql-driver/mysql"
 )
-import _ "github.com/go-sql-driver/mysql"
 
 var db *sql.DB
 
@@ -17,7 +16,7 @@ func init() {
 	}
 }
 
-func Orders() (orders []order.Order, err error) {
+func Orders() (orders []Order, err error) {
 	rows, err := db.Query(`
 	SELECT id, name, email, status, created_at
 	FROM orders
@@ -27,7 +26,7 @@ func Orders() (orders []order.Order, err error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		o := order.Order{}
+		o := Order{}
 		err = rows.Scan(&o.ID, &o.Name, &o.Email, &o.Status, &o.CreatedAt)
 		if err != nil {
 			return orders, err
