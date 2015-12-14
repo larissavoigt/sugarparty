@@ -5,11 +5,11 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/admin"
-	"github.com/luizbranco/sugarparty/internal/auth"
-	"github.com/luizbranco/sugarparty/internal/cart"
+	"github.com/luizbranco/sugarparty/internal/controllers/admin"
+	"github.com/luizbranco/sugarparty/internal/controllers/cart"
+	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
 	"github.com/luizbranco/sugarparty/internal/models"
-	"github.com/luizbranco/sugarparty/internal/templates"
+	"github.com/luizbranco/sugarparty/internal/views"
 )
 
 var (
@@ -38,28 +38,28 @@ func main() {
 
 		id := r.URL.Path[len("/categories/"):]
 		if id == "" {
-			templates.NotFound(w)
+			views.NotFound(w)
 			return
 		}
 
 		cat, err := models.FindCategory(id)
 		if err != nil {
-			templates.Error(w, err)
+			views.Error(w, err)
 		}
 		p, err := models.ActiveProducts(id)
 		if err != nil {
-			templates.Error(w, err)
+			views.Error(w, err)
 		}
 		content := struct {
 			Category *models.Category
 			Products []models.Product
-			Cart     *cart.Cart
+			Cart     *models.Cart
 		}{
 			cat,
 			p,
-			cart.New(r),
+			models.NewCart(r),
 		}
-		templates.Render(w, "category", content)
+		views.Render(w, "category", content)
 	})
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -68,22 +68,22 @@ func main() {
 			return
 		}
 		if r.URL.Path != "/" {
-			templates.NotFound(w)
+			views.NotFound(w)
 			return
 		}
 		cat, err := models.ActiveCategories()
 		if err != nil {
-			templates.Error(w, err)
+			views.Error(w, err)
 			return
 		}
 		content := struct {
 			Categories []models.Category
-			Cart       *cart.Cart
+			Cart       *models.Cart
 		}{
 			cat,
-			cart.New(r),
+			models.NewCart(r),
 		}
-		templates.Render(w, "index", content)
+		views.Render(w, "index", content)
 	})
 
 	log.Fatal(http.ListenAndServe(":"+*port, nil))

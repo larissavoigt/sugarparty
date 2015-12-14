@@ -1,24 +1,24 @@
-package templates
+package views
 
 import (
 	"html/template"
 	"net/http"
 )
 
-type Templates struct {
+type Views struct {
 	*template.Template
 }
 
 var tpl = New("templates")
 
-func New(path string) *Templates {
+func New(path string) *Views {
 	t := template.New(path)
 	template.Must(t.ParseGlob(path + "/*.html"))
-	return &Templates{t}
+	return &Views{t}
 }
 
-func (t *Templates) Render(w http.ResponseWriter, name string, data interface{}) {
-	err := t.ExecuteTemplate(w, name+".html", data)
+func (v *Views) Render(w http.ResponseWriter, name string, data interface{}) {
+	err := v.ExecuteTemplate(w, name+".html", data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

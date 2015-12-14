@@ -3,11 +3,11 @@ package admin
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/auth"
-	"github.com/luizbranco/sugarparty/internal/templates"
+	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
+	"github.com/luizbranco/sugarparty/internal/views"
 )
 
-var tpl = templates.New("templates/admin")
+var tpl = views.New("templates/admin")
 
 func NewServeMux() *http.ServeMux {
 	mux := http.NewServeMux()
@@ -47,6 +47,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/admin/login", http.StatusFound)
 		}
 	} else {
-		templates.NotFound(w)
+		views.NotFound(w)
 	}
 }

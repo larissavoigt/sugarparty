@@ -3,9 +3,9 @@ package admin
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/auth"
+	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
 	"github.com/luizbranco/sugarparty/internal/models"
-	"github.com/luizbranco/sugarparty/internal/templates"
+	"github.com/luizbranco/sugarparty/internal/views"
 )
 
 func categories(w http.ResponseWriter, r *http.Request) {
@@ -20,7 +20,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 		case "":
 			categories, err := models.AllCategories()
 			if err != nil {
-				templates.Error(w, err)
+				views.Error(w, err)
 			} else {
 				tpl.Render(w, "categories", categories)
 			}
@@ -29,7 +29,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 		default:
 			c, err := models.FindCategory(id)
 			if err != nil {
-				templates.Error(w, err)
+				views.Error(w, err)
 			} else {
 				tpl.Render(w, "category", c)
 			}
@@ -47,7 +47,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 			err = models.UpdateCategory(c)
 		}
 		if err != nil {
-			templates.Error(w, err)
+			views.Error(w, err)
 		} else {
 			http.Redirect(w, r, "/admin/categories", http.StatusFound)
 		}

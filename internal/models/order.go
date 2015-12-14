@@ -20,10 +20,10 @@ type Order struct {
 	Phone   string
 	Status
 	CreatedAt time.Time
-	Items     []Item
+	Items     []OrderItem
 }
 
-type Item struct {
+type OrderItem struct {
 	ID        int
 	OrderID   int
 	ProductID int

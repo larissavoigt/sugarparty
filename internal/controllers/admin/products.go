@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/luizbranco/sugarparty/internal/auth"
+	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
 	"github.com/luizbranco/sugarparty/internal/models"
-	"github.com/luizbranco/sugarparty/internal/templates"
+	"github.com/luizbranco/sugarparty/internal/views"
 )
 
 func products(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +36,7 @@ func products(w http.ResponseWriter, r *http.Request) {
 func indexProducts(w http.ResponseWriter) {
 	products, err := models.AllProducts()
 	if err != nil {
-		templates.Error(w, err)
+		views.Error(w, err)
 	} else {
 		tpl.Render(w, "products", products)
 	}
@@ -45,12 +45,12 @@ func indexProducts(w http.ResponseWriter) {
 func showProduct(w http.ResponseWriter, id string) {
 	p, err := models.FindProduct(id)
 	if err != nil {
-		templates.Error(w, err)
+		views.Error(w, err)
 		return
 	}
 	c, err := models.AllCategories()
 	if err != nil {
-		templates.Error(w, err)
+		views.Error(w, err)
 		return
 	}
 	content := struct {
@@ -66,7 +66,7 @@ func showProduct(w http.ResponseWriter, id string) {
 func newProduct(w http.ResponseWriter) {
 	c, err := models.AllCategories()
 	if err != nil {
-		templates.Error(w, err)
+		views.Error(w, err)
 		return
 	}
 	content := struct {
@@ -99,7 +99,7 @@ func createProduct(w http.ResponseWriter, r *http.Request, id string) {
 		err = models.UpdateProduct(p)
 	}
 	if err != nil {
-		templates.Error(w, err)
+		views.Error(w, err)
 	} else {
 		http.Redirect(w, r, "/admin/products/", http.StatusFound)
 	}

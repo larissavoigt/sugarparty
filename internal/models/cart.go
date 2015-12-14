@@ -1,28 +1,26 @@
-package cart
+package models
 
 import (
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/luizbranco/sugarparty/internal/models"
 )
 
 type Cart struct {
 	items map[string]int
-	Items []Item
+	Items []CartItem
 	Qty   int
 	Price float64
 }
 
-type Item struct {
-	models.Product
+type CartItem struct {
+	Product
 	Qty   int
 	Price float64
 }
 
-func New(r *http.Request) *Cart {
+func NewCart(r *http.Request) *Cart {
 	c := &Cart{items: make(map[string]int)}
 	cookie, err := r.Cookie("cart")
 	if err != nil {
@@ -44,12 +42,12 @@ func New(r *http.Request) *Cart {
 		}
 	}
 
-	products, _ := models.FindProducts(keys)
-	c.Items = make([]Item, 0, len(products))
+	products, _ := FindProducts(keys)
+	c.Items = make([]CartItem, 0, len(products))
 	for _, p := range products {
 		qty := c.items[p.ID]
 		price := p.Price * float64(qty)
-		i := Item{p, qty, price}
+		i := CartItem{p, qty, price}
 		c.Qty += qty
 		c.Price += price
 		c.Items = append(c.Items, i)

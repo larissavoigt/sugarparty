@@ -1,13 +1,17 @@
 package cart
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/luizbranco/sugarparty/internal/models"
+)
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, "", http.StatusMethodNotAllowed)
 		return
 	}
-	c := New(r)
+	c := models.NewCart(r)
 	id := r.FormValue("id")
 	url := r.URL.Path[len("/cart/"):]
 	switch url {
