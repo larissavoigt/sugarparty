@@ -60,7 +60,12 @@ func New(r *http.Request) *Cart {
 }
 
 func (c *Cart) Add(id string, qty int) {
-	c.items[id] += qty
+	n := c.items[id] + qty
+	if n >= 1 {
+		c.items[id] = n
+	} else {
+		c.Remove(id)
+	}
 }
 
 func (c *Cart) Remove(id string) {
