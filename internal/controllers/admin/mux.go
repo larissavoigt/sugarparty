@@ -13,6 +13,7 @@ func NewServeMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/admin/categories/", categories)
 	mux.HandleFunc("/admin/products/", products)
+	mux.HandleFunc("/admin/orders/", orders)
 	mux.HandleFunc("/admin/login", login)
 	mux.HandleFunc("/admin/logout", logout)
 	mux.HandleFunc("/admin/", index)
