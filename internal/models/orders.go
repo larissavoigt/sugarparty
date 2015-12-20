@@ -25,11 +25,12 @@ type Order struct {
 }
 
 type OrderItem struct {
-	ID        int
-	OrderID   int
-	ProductID int
-	Quantity  int
-	Price     float64
+	ID          int
+	OrderID     int
+	ProductID   int
+	ProductName string
+	Quantity    int
+	Price       float64
 }
 
 func (o Order) StatusName() string {
@@ -74,6 +75,40 @@ func CreateOrder(o *Order, c *Cart) error {
 		}
 	}
 	return nil
+}
+
+func FindOrder(id string) (*Order, error) {
+	o := &Order{}
+	err := db.QueryRow(`
+	SELECT id, name, email, phone, message, status, price, created_at
+	FROM orders WHERE id=?`, id).Scan(&o.ID, &o.Name, &o.Email, &o.Phone,
+		&o.Message, &o.Status, &o.Price, &o.CreatedAt)
+	if err != nil {
+		return o, err
+	}
+	q := `SELECT p.name, i.quantity, i.price
+	FROM order_items i
+	INNER JOIN products p
+	ON p.id = i.product_id
+	WHERE i.order_id = ?
+	`
+
+	rows, err := db.Query(q, o.ID)
+
+	if err != nil {
+		return o, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		i := OrderItem{}
+		err = rows.Scan(&i.ProductName, &i.Quantity, &i.Price)
+		if err != nil {
+			return o, err
+		}
+		o.Items = append(o.Items, i)
+	}
+	err = rows.Err()
+	return o, err
 }
 
 func AllOrders() (orders []Order, err error) {

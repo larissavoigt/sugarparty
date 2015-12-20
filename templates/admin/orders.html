@@ -31,7 +31,7 @@
             <td>{{.StatusName}}</td>
             <td>R$ {{.Price | printf "%.2f" }}</td>
             <td>{{.Timestamp }}</td>
-            <td></td>
+            <td><a href="/admin/orders/{{.ID}}">ver</a></td>
           </tr>
         {{ end }}
       </tbody>

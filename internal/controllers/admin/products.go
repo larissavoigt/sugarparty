@@ -20,7 +20,7 @@ func products(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		switch id {
 		case "":
-			indexProducts(w)
+			listProducts(w)
 		case "new":
 			newProduct(w)
 		default:
@@ -33,7 +33,7 @@ func products(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func indexProducts(w http.ResponseWriter) {
+func listProducts(w http.ResponseWriter) {
 	products, err := models.AllProducts()
 	if err != nil {
 		views.Error(w, err)

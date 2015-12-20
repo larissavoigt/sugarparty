@@ -14,17 +14,35 @@ func orders(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	id := r.URL.Path[len("/admin/orders/"):]
 	switch r.Method {
 	case "GET":
-		orders, err := models.AllOrders()
-		if err != nil {
-			views.Error(w, err)
+		if id == "" {
+			listOrders(w)
 		} else {
-			tpl.Render(w, "orders", orders)
+			showOrder(w, id)
 		}
 	case "POST":
 		//TODO
 	default:
 		http.Error(w, "", http.StatusMethodNotAllowed)
+	}
+}
+
+func listOrders(w http.ResponseWriter) {
+	orders, err := models.AllOrders()
+	if err != nil {
+		views.Error(w, err)
+	} else {
+		tpl.Render(w, "orders", orders)
+	}
+}
+
+func showOrder(w http.ResponseWriter, id string) {
+	o, err := models.FindOrder(id)
+	if err != nil {
+		views.Error(w, err)
+	} else {
+		tpl.Render(w, "order", o)
 	}
 }
