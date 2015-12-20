@@ -28,7 +28,8 @@ CREATE TABLE orders(
   message TEXT,
   status TINYINT UNSIGNED NOT NULL DEFAULT 0,
   price DECIMAL(15,2) NOT NULL,
-  created_at TIMESTAMP NOT NULL
+  created_at DATETIME NOT NULL,
+  updated_at DATETIME NOT NULL
 );
 
 CREATE TABLE order_items(

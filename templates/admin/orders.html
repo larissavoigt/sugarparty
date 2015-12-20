@@ -12,12 +12,9 @@
       <thead>
         <tr>
           <th>Nome</th>
-          <th>Email</th>
-          <th>Telefone</th>
-          <th>Mensagem</th>
           <th>Status</th>
-          <th>Valor</th>
           <th>Enviado</th>
+          <th>Atualizado</th>
           <th></th>
         </tr>
       </thead>
@@ -25,12 +22,9 @@
         {{ range . }}
           <tr>
             <td>{{.Name}}</td>
-            <td>{{.Email}}</td>
-            <td>{{.Phone}}</td>
-            <td>{{.Message}}</td>
             <td>{{.StatusName}}</td>
-            <td>R$ {{.Price | printf "%.2f" }}</td>
-            <td>{{.Timestamp }}</td>
+            <td>{{.CreatedAt.Local.Format "Jan 2, 3:04pm"}}</td>
+            <td>{{.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</td>
             <td><a href="/admin/orders/{{.ID}}">ver</a></td>
           </tr>
         {{ end }}

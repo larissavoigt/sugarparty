@@ -9,25 +9,28 @@
     <h1>Admin Pedido</h1>
     <dl>
       <dt>Nome</dt>
-      <dd>{{.Name}}</dd>
+      <dd>{{.Order.Name}}</dd>
 
       <dt>Email</dt>
-      <dd>{{.Email}}</dd>
+      <dd>{{.Order.Email}}</dd>
 
       <dt>Telefone</dt>
-      <dd>{{.Phone}}</dd>
+      <dd>{{.Order.Phone}}</dd>
 
       <dt>Mensagem</dt>
-      <dd>{{.Message}}</dd>
+      <dd>{{.Order.Message}}</dd>
 
       <dt>Status</dt>
-      <dd>{{.StatusName}}</dd>
+      <dd>{{.Order.StatusName}}</dd>
 
       <dt>Valor</dt>
-      <dd>R$ {{.Price | printf "%.2f" }}</dd>
+      <dd>R$ {{.Order.Price | printf "%.2f" }}</dd>
 
       <dt>Enviado</dt>
-      <dd>{{.Timestamp }}</dd>
+      <dd>{{.Order.CreatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
+
+      <dt>Atualizado</dt>
+      <dd>{{.Order.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
     </dd>
     <table>
       <thead>
@@ -38,7 +41,7 @@
         </tr>
       </thead>
       <tbody>
-        {{ range .Items }}
+        {{ range .Order.Items }}
           <tr>
             <td>{{.ProductName}}</td>
             <td>{{.Quantity}}</td>
@@ -48,5 +51,18 @@
         {{ end }}
       </tbody>
     </table>
+
+    <form action="/admin/orders/{{.Order.ID}}" method="post">
+      <div>
+        <label for="status">Mudar Status</label>
+        <select name="status">
+          {{ $o := .Order }}
+          {{ range $i, $s := .StatusNames }}
+          <option value="{{$i}}" {{ if eq $i $o.Status }}selected{{ end }}>{{$s}}</option>
+          {{ end }}
+        </select>
+      </div>
+      <input type="submit" value="Alterar" />
+    </form>
   </body>
 </html>

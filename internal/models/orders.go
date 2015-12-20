@@ -12,6 +12,14 @@ const (
 	Canceled
 )
 
+var StatusNames = []string{
+	"Pendente",
+	"Em Andamento",
+	"Finalizado",
+	"Entregue",
+	"Cancelado",
+}
+
 type Order struct {
 	ID      int
 	Name    string
@@ -21,6 +29,7 @@ type Order struct {
 	Status
 	Price     float64
 	CreatedAt time.Time
+	UpdatedAt time.Time
 	Items     []OrderItem
 }
 
@@ -34,30 +43,20 @@ type OrderItem struct {
 }
 
 func (o Order) StatusName() string {
-	switch o.Status {
-	case Pending:
-		return "Pendente"
-	case Started:
-		return "Em Andamento"
-	case Finished:
-		return "Finalizado"
-	case Delivery:
-		return "Entregue"
-	case Canceled:
-		return "Cancelado"
-	default:
+	i := int(o.Status)
+	if i < len(StatusNames) {
+		return StatusNames[i]
+	} else {
 		return "Desconhecido"
 	}
 }
 
-func (o Order) Timestamp() string {
-	return o.CreatedAt.Local().Format("Jan 2, 3:04pm")
-}
-
 func CreateOrder(o *Order, c *Cart) error {
 	res, err := db.Exec(`
-	INSERT INTO orders (name, email, message, phone, price, created_at)
-	VALUES(?, ?, ?, ?, ?, ?)`, o.Name, o.Email, o.Message, o.Phone, c.Total(), time.Now())
+	INSERT INTO orders (name, email, message, phone, price, created_at,
+	updated_at)
+	VALUES(?, ?, ?, ?, ?, ?, ?)`, o.Name, o.Email, o.Message, o.Phone, c.Total(),
+		time.Now(), time.Now())
 	if err != nil {
 		return err
 	}
@@ -77,12 +76,19 @@ func CreateOrder(o *Order, c *Cart) error {
 	return nil
 }
 
+func UpdateOrder(id string, status int) error {
+	_, err := db.Exec(`
+	UPDATE orders SET status=?, updated_at = ? where id = ?`, status, time.Now(),
+		id)
+	return err
+}
+
 func FindOrder(id string) (*Order, error) {
 	o := &Order{}
 	err := db.QueryRow(`
-	SELECT id, name, email, phone, message, status, price, created_at
+	SELECT id, name, email, phone, message, status, price, created_at, updated_at
 	FROM orders WHERE id=?`, id).Scan(&o.ID, &o.Name, &o.Email, &o.Phone,
-		&o.Message, &o.Status, &o.Price, &o.CreatedAt)
+		&o.Message, &o.Status, &o.Price, &o.CreatedAt, &o.UpdatedAt)
 	if err != nil {
 		return o, err
 	}
@@ -112,7 +118,7 @@ func FindOrder(id string) (*Order, error) {
 }
 
 func AllOrders() (orders []Order, err error) {
-	q := `SELECT id, name, email, phone, message, status, price, created_at
+	q := `SELECT id, name, status, created_at, updated_at
 	FROM orders p
 	ORDER BY id DESC
 	`
@@ -124,8 +130,7 @@ func AllOrders() (orders []Order, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		o := Order{}
-		err = rows.Scan(&o.ID, &o.Name, &o.Email, &o.Phone, &o.Message, &o.Status,
-			&o.Price, &o.CreatedAt)
+		err = rows.Scan(&o.ID, &o.Name, &o.Status, &o.CreatedAt, &o.UpdatedAt)
 		if err != nil {
 			return orders, err
 		}
