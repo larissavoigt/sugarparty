@@ -16,6 +16,7 @@
           <th>Telefone</th>
           <th>Mensagem</th>
           <th>Status</th>
+          <th>Valor</th>
           <th>Enviado</th>
           <th></th>
         </tr>
@@ -28,6 +29,7 @@
             <td>{{.Phone}}</td>
             <td>{{.Message}}</td>
             <td>{{.StatusName}}</td>
+            <td>R$ {{.Price | printf "%.2f" }}</td>
             <td>{{.Timestamp }}</td>
             <td></td>
           </tr>

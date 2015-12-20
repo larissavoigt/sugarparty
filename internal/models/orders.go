@@ -19,6 +19,7 @@ type Order struct {
 	Message string
 	Phone   string
 	Status
+	Price     float64
 	CreatedAt time.Time
 	Items     []OrderItem
 }
@@ -53,14 +54,30 @@ func (o Order) Timestamp() string {
 }
 
 func CreateOrder(o *Order, c *Cart) error {
-	_, err := db.Exec(`
-	INSERT INTO orders (name, email, message, phone, created_at)
-	VALUES(?, ?, ?, ?, ?)`, o.Name, o.Email, o.Message, o.Phone, time.Now())
-	return err
+	res, err := db.Exec(`
+	INSERT INTO orders (name, email, message, phone, price, created_at)
+	VALUES(?, ?, ?, ?, ?, ?)`, o.Name, o.Email, o.Message, o.Phone, c.Total(), time.Now())
+	if err != nil {
+		return err
+	}
+	id, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
+	for _, i := range c.Items {
+		_, err := db.Exec(`
+		INSERT INTO order_items (order_id, product_id, quantity, price)
+		VALUES(?, ?, ?, ?)
+		`, id, i.Product.ID, i.Quantity, i.Product.Price)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func AllOrders() (orders []Order, err error) {
-	q := `SELECT id, name, email, phone, message, status, created_at
+	q := `SELECT id, name, email, phone, message, status, price, created_at
 	FROM orders p
 	ORDER BY id DESC
 	`
@@ -72,7 +89,8 @@ func AllOrders() (orders []Order, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		o := Order{}
-		err = rows.Scan(&o.ID, &o.Name, &o.Email, &o.Phone, &o.Message, &o.Status, &o.CreatedAt)
+		err = rows.Scan(&o.ID, &o.Name, &o.Email, &o.Phone, &o.Message, &o.Status,
+			&o.Price, &o.CreatedAt)
 		if err != nil {
 			return orders, err
 		}

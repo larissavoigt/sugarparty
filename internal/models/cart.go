@@ -95,6 +95,10 @@ func (c *Cart) Destroy(w http.ResponseWriter) {
 	http.SetCookie(w, cookie)
 }
 
-func (c *Cart) Total() error {
-	return nil
+func (c *Cart) Total() float64 {
+	var t float64
+	for _, i := range c.Items {
+		t += i.Product.Price
+	}
+	return t
 }
