@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
-	"github.com/luizbranco/sugarparty/internal/models"
+	"github.com/luizbranco/sugarparty/internal/models/order"
 	"github.com/luizbranco/sugarparty/internal/views"
 )
 
@@ -35,7 +35,7 @@ func orders(w http.ResponseWriter, r *http.Request) {
 }
 
 func listOrders(w http.ResponseWriter) {
-	orders, err := models.AllOrders()
+	orders, err := order.All()
 	if err != nil {
 		views.Error(w, err)
 	} else {
@@ -44,13 +44,13 @@ func listOrders(w http.ResponseWriter) {
 }
 
 func showOrder(w http.ResponseWriter, id string) {
-	o, err := models.FindOrder(id)
+	o, err := order.Find(id)
 	content := struct {
-		Order       *models.Order
+		Order       *order.Order
 		StatusNames []string
 	}{
 		o,
-		models.StatusNames,
+		order.StatusNames,
 	}
 	if err != nil {
 		views.Error(w, err)
@@ -62,7 +62,7 @@ func showOrder(w http.ResponseWriter, id string) {
 func updateOrder(w http.ResponseWriter, r *http.Request, id string) {
 	status := r.FormValue("status")
 	i, _ := strconv.Atoi(status)
-	err := models.UpdateOrder(id, i)
+	err := order.Update(id, i)
 	if err != nil {
 		views.Error(w, err)
 	} else {

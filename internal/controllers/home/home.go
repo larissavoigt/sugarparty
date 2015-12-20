@@ -3,7 +3,8 @@ package home
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/models"
+	"github.com/luizbranco/sugarparty/internal/models/cart"
+	"github.com/luizbranco/sugarparty/internal/models/category"
 	"github.com/luizbranco/sugarparty/internal/views"
 )
 
@@ -16,17 +17,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		views.NotFound(w)
 		return
 	}
-	cat, err := models.ActiveCategories()
+	cat, err := category.Active()
 	if err != nil {
 		views.Error(w, err)
 		return
 	}
 	content := struct {
-		Categories []models.Category
-		Cart       *models.Cart
+		Categories []category.Category
+		Cart       *cart.Cart
 	}{
 		cat,
-		models.NewCart(r),
+		cart.New(r),
 	}
 	views.Render(w, "index", content)
 }

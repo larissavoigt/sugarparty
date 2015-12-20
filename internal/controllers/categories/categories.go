@@ -3,7 +3,9 @@ package categories
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/models"
+	"github.com/luizbranco/sugarparty/internal/models/cart"
+	"github.com/luizbranco/sugarparty/internal/models/category"
+	"github.com/luizbranco/sugarparty/internal/models/product"
 	"github.com/luizbranco/sugarparty/internal/views"
 )
 
@@ -19,22 +21,22 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cat, err := models.FindCategory(id)
+	cat, err := category.Find(id)
 	if err != nil {
 		views.Error(w, err)
 	}
-	p, err := models.ActiveProducts(id)
+	p, err := product.Active(id)
 	if err != nil {
 		views.Error(w, err)
 	}
 	content := struct {
-		Category *models.Category
-		Products []models.Product
-		Cart     *models.Cart
+		Category *category.Category
+		Products []product.Product
+		Cart     *cart.Cart
 	}{
 		cat,
 		p,
-		models.NewCart(r),
+		cart.New(r),
 	}
 	views.Render(w, "category", content)
 }

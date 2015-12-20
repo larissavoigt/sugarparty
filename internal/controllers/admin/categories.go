@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
-	"github.com/luizbranco/sugarparty/internal/models"
+	"github.com/luizbranco/sugarparty/internal/models/category"
 	"github.com/luizbranco/sugarparty/internal/views"
 )
 
@@ -18,7 +18,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 	case "GET":
 		switch id {
 		case "":
-			categories, err := models.AllCategories()
+			categories, err := category.All()
 			if err != nil {
 				views.Error(w, err)
 			} else {
@@ -27,7 +27,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 		case "new":
 			tpl.Render(w, "category", nil)
 		default:
-			c, err := models.FindCategory(id)
+			c, err := category.Find(id)
 			if err != nil {
 				views.Error(w, err)
 			} else {
@@ -36,15 +36,15 @@ func categories(w http.ResponseWriter, r *http.Request) {
 		}
 	case "POST":
 		var err error
-		c := &models.Category{
+		c := &category.Category{
 			ID:          r.FormValue("id"),
 			Name:        r.FormValue("name"),
 			Description: r.FormValue("description"),
 		}
 		if id == "" {
-			err = models.CreateCategory(c)
+			err = category.Create(c)
 		} else {
-			err = models.UpdateCategory(c)
+			err = category.Update(c)
 		}
 		if err != nil {
 			views.Error(w, err)

@@ -1,8 +1,11 @@
-package models
+package product
 
 import (
 	"fmt"
 	"strings"
+
+	"github.com/luizbranco/sugarparty/internal/models/category"
+	"github.com/luizbranco/sugarparty/internal/models/db"
 )
 
 type Product struct {
@@ -11,24 +14,24 @@ type Product struct {
 	Description string
 	Price       float64
 	Active      bool
-	Category
+	Category    category.Category
 }
 
-func CreateProduct(p *Product) error {
+func Create(p *Product) error {
 	_, err := db.Exec(`
 	INSERT INTO products (name, description, price, active, category_id)
 	VALUES(?, ?, ?, ?, ?)`, p.Name, p.Description, p.Price, p.Active, p.Category.ID)
 	return err
 }
 
-func UpdateProduct(p *Product) error {
+func Update(p *Product) error {
 	_, err := db.Exec(`
 	UPDATE products SET name=?, description=?, price=?, active=?, category_id=?
 	where id = ?`, p.Name, p.Description, p.Price, p.Active, p.Category.ID, p.ID)
 	return err
 }
 
-func FindProduct(id string) (*Product, error) {
+func Find(id string) (*Product, error) {
 	p := &Product{}
 	err := db.QueryRow(`
 	SELECT id, name, description, price, active, category_id
@@ -37,7 +40,7 @@ func FindProduct(id string) (*Product, error) {
 	return p, err
 }
 
-func FindProducts(ids []interface{}) ([]Product, error) {
+func FindAll(ids []interface{}) ([]Product, error) {
 	args := strings.Repeat("?,", len(ids))
 	q := fmt.Sprintf(`SELECT p.id, p.name, p.description, p.price, p.active, c.name
 	FROM products p
@@ -45,11 +48,11 @@ func FindProducts(ids []interface{}) ([]Product, error) {
 	ON p.category_id = c.id
 	WHERE p.id IN (%s)
 	`, args[:len(args)-1])
-	return scanProducts(q, ids...)
+	return scan(q, ids...)
 }
 
-func AllProducts() ([]Product, error) {
-	return scanProducts(`
+func All() ([]Product, error) {
+	return scan(`
 	SELECT p.id, p.name, p.description, p.price, p.active, c.name
 	FROM products p
 	INNER JOIN categories c
@@ -57,15 +60,15 @@ func AllProducts() ([]Product, error) {
 	`)
 }
 
-func ActiveProducts(id string) ([]Product, error) {
-	return scanProducts(`
+func Active(id string) ([]Product, error) {
+	return scan(`
 	SELECT id, name, description, price, active, ''
 	FROM products
 	WHERE category_id = ? AND active IS TRUE
 	`, id)
 }
 
-func scanProducts(query string, args ...interface{}) (products []Product, err error) {
+func scan(query string, args ...interface{}) (products []Product, err error) {
 	rows, err := db.Query(query, args...)
 
 	if err != nil {

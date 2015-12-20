@@ -1,6 +1,11 @@
-package models
+package order
 
-import "time"
+import (
+	"time"
+
+	"github.com/luizbranco/sugarparty/internal/models/cart"
+	"github.com/luizbranco/sugarparty/internal/models/db"
+)
 
 type Status int
 
@@ -51,7 +56,7 @@ func (o Order) StatusName() string {
 	}
 }
 
-func CreateOrder(o *Order, c *Cart) error {
+func Create(o *Order, c *cart.Cart) error {
 	res, err := db.Exec(`
 	INSERT INTO orders (name, email, message, phone, price, created_at,
 	updated_at)
@@ -76,14 +81,14 @@ func CreateOrder(o *Order, c *Cart) error {
 	return nil
 }
 
-func UpdateOrder(id string, status int) error {
+func Update(id string, status int) error {
 	_, err := db.Exec(`
 	UPDATE orders SET status=?, updated_at = ? where id = ?`, status, time.Now(),
 		id)
 	return err
 }
 
-func FindOrder(id string) (*Order, error) {
+func Find(id string) (*Order, error) {
 	o := &Order{}
 	err := db.QueryRow(`
 	SELECT id, name, email, phone, message, status, price, created_at, updated_at
@@ -117,7 +122,7 @@ func FindOrder(id string) (*Order, error) {
 	return o, err
 }
 
-func AllOrders() (orders []Order, err error) {
+func All() (orders []Order, err error) {
 	q := `SELECT id, name, status, created_at, updated_at
 	FROM orders p
 	ORDER BY id DESC
