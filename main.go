@@ -10,17 +10,23 @@ import (
 	"github.com/luizbranco/sugarparty/internal/controllers/categories"
 	"github.com/luizbranco/sugarparty/internal/controllers/home"
 	"github.com/luizbranco/sugarparty/internal/controllers/orders"
+	"github.com/luizbranco/sugarparty/internal/mail"
 	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
 )
 
 var (
 	port     = flag.String("port", "3000", "Server port")
-	password = flag.String("password", "", "Admin password")
+	password = flag.String("admin-password", "", "Admin password")
+	mailTo   = flag.String("mail-recipient", "", "Mail recipient")
+	mailUser = flag.String("mail-username", "", "Mail username")
+	mailPass = flag.String("mail-password", "", "Mail password")
+	mailHost = flag.String("mail-host", "", "Mail host")
 )
 
 func init() {
 	flag.Parse()
 	auth.SetPassword(*password)
+	mail.Config(*mailTo, *mailUser, *mailPass, *mailHost)
 }
 
 func main() {

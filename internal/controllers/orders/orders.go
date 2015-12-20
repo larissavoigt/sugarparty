@@ -1,8 +1,10 @@
 package orders
 
 import (
+	"log"
 	"net/http"
 
+	"github.com/luizbranco/sugarparty/internal/mail"
 	"github.com/luizbranco/sugarparty/internal/models/cart"
 	"github.com/luizbranco/sugarparty/internal/models/order"
 	"github.com/luizbranco/sugarparty/internal/views"
@@ -33,8 +35,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			Phone:   r.FormValue("phone"),
 			Message: r.FormValue("message"),
 		}
-		err := order.Create(o, c)
+		id, err := order.Create(o, c)
 		if err == nil {
+			go func() {
+				err := mail.NotifyOrder(id)
+				if err != nil {
+					log.Printf("order mail error: %s", err)
+				}
+			}()
 			c.Destroy(w)
 			http.Redirect(w, r, "/orders/confirmation", http.StatusFound)
 		} else {

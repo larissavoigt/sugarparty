@@ -1,6 +1,7 @@
 package order
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/luizbranco/sugarparty/internal/models/cart"
@@ -56,18 +57,18 @@ func (o Order) StatusName() string {
 	}
 }
 
-func Create(o *Order, c *cart.Cart) error {
+func Create(o *Order, c *cart.Cart) (string, error) {
 	res, err := db.Exec(`
 	INSERT INTO orders (name, email, message, phone, price, created_at,
 	updated_at)
 	VALUES(?, ?, ?, ?, ?, ?, ?)`, o.Name, o.Email, o.Message, o.Phone, c.Total(),
 		time.Now(), time.Now())
 	if err != nil {
-		return err
+		return "", err
 	}
 	id, err := res.LastInsertId()
 	if err != nil {
-		return err
+		return "", err
 	}
 	for _, i := range c.Items {
 		_, err := db.Exec(`
@@ -75,10 +76,10 @@ func Create(o *Order, c *cart.Cart) error {
 		VALUES(?, ?, ?, ?)
 		`, id, i.Product.ID, i.Quantity, i.Product.Price)
 		if err != nil {
-			return err
+			return "", err
 		}
 	}
-	return nil
+	return strconv.FormatInt(id, 10), nil
 }
 
 func Update(id string, status int) error {

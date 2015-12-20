@@ -1,0 +1,16 @@
+To: {{.To}}
+Subject: {{.Subject}}
+
+Nome: {{.Order.Name}}
+Email: {{.Order.Email}}
+Telefone: {{.Order.Phone}}
+Mensagem: {{.Order.Message}}
+Status: {{.Order.StatusName}}
+Valor: R$ {{.Order.Price | printf "%.2f" }}
+Enviado: {{.Order.CreatedAt.Local.Format "Jan 2, 3:04pm"}}
+
+{{ range .Order.Items }}
+Produto: {{.ProductName}}
+Quantidade: {{.Quantity}}
+Preço: R$ {{.Price | printf "%.2f" }}
+{{ end }}
