@@ -5,15 +5,17 @@
     <title>Festa do Açúcar</title>
   </head>
   <body>
-    <h1>Festa do Açúcar</h1>
-    {{range .Categories}}
-      <div>
-        <h3>
-          <a href="/categories/{{.ID}}">{{.Name}} ({{.Count}})</a>
-        </h3>
-        <p>{{.Description}}</p>
-      </div>
-    {{end}}
-    {{template "cart" .}}
+    {{template "header"}}
+    <div class="container-fluid">
+      {{range .Categories}}
+        <div>
+          <h3>
+            <a href="/categories/{{.ID}}">{{.Name}} ({{.Count}})</a>
+          </h3>
+          <p>{{.Description}}</p>
+        </div>
+      {{end}}
+      {{template "cart" .}}
+    </div>
   </body>
 </html>
