@@ -4,10 +4,10 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/mail"
-	"github.com/luizbranco/sugarparty/internal/models/cart"
-	"github.com/luizbranco/sugarparty/internal/models/order"
-	"github.com/luizbranco/sugarparty/internal/views"
+	"github.com/larissavoigt/sugarparty/internal/mail"
+	"github.com/larissavoigt/sugarparty/internal/models/cart"
+	"github.com/larissavoigt/sugarparty/internal/models/order"
+	"github.com/larissavoigt/sugarparty/internal/views"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

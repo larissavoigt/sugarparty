@@ -6,7 +6,7 @@ import (
 	"net/smtp"
 	"text/template"
 
-	"github.com/luizbranco/sugarparty/internal/models/order"
+	"github.com/larissavoigt/sugarparty/internal/models/order"
 )
 
 var (

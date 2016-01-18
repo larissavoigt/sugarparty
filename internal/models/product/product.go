@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/luizbranco/sugarparty/internal/models/category"
-	"github.com/luizbranco/sugarparty/internal/models/db"
+	"github.com/larissavoigt/sugarparty/internal/models/category"
+	"github.com/larissavoigt/sugarparty/internal/models/db"
 )
 
 type Product struct {

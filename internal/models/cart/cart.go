@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/luizbranco/sugarparty/internal/models/product"
+	"github.com/larissavoigt/sugarparty/internal/models/product"
 )
 
 type Cart struct {

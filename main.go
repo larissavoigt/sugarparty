@@ -5,13 +5,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/controllers/admin"
-	"github.com/luizbranco/sugarparty/internal/controllers/cart"
-	"github.com/luizbranco/sugarparty/internal/controllers/categories"
-	"github.com/luizbranco/sugarparty/internal/controllers/home"
-	"github.com/luizbranco/sugarparty/internal/controllers/orders"
-	"github.com/luizbranco/sugarparty/internal/mail"
-	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
+	"github.com/larissavoigt/sugarparty/internal/controllers/admin"
+	"github.com/larissavoigt/sugarparty/internal/controllers/cart"
+	"github.com/larissavoigt/sugarparty/internal/controllers/categories"
+	"github.com/larissavoigt/sugarparty/internal/controllers/home"
+	"github.com/larissavoigt/sugarparty/internal/controllers/orders"
+	"github.com/larissavoigt/sugarparty/internal/mail"
+	"github.com/larissavoigt/sugarparty/internal/middlewares/auth"
 )
 
 var (

@@ -3,7 +3,7 @@ package cart
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/models/cart"
+	"github.com/larissavoigt/sugarparty/internal/models/cart"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

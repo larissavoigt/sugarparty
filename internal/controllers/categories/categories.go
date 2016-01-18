@@ -3,10 +3,10 @@ package categories
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/models/cart"
-	"github.com/luizbranco/sugarparty/internal/models/category"
-	"github.com/luizbranco/sugarparty/internal/models/product"
-	"github.com/luizbranco/sugarparty/internal/views"
+	"github.com/larissavoigt/sugarparty/internal/models/cart"
+	"github.com/larissavoigt/sugarparty/internal/models/category"
+	"github.com/larissavoigt/sugarparty/internal/models/product"
+	"github.com/larissavoigt/sugarparty/internal/views"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {

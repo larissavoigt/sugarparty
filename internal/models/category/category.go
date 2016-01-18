@@ -1,6 +1,6 @@
 package category
 
-import "github.com/luizbranco/sugarparty/internal/models/db"
+import "github.com/larissavoigt/sugarparty/internal/models/db"
 
 type Category struct {
 	ID          string

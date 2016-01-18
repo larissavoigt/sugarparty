@@ -4,8 +4,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/luizbranco/sugarparty/internal/models/cart"
-	"github.com/luizbranco/sugarparty/internal/models/db"
+	"github.com/larissavoigt/sugarparty/internal/models/cart"
+	"github.com/larissavoigt/sugarparty/internal/models/db"
 )
 
 type Status int

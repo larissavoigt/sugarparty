@@ -3,8 +3,8 @@ package admin
 import (
 	"net/http"
 
-	"github.com/luizbranco/sugarparty/internal/middlewares/auth"
-	"github.com/luizbranco/sugarparty/internal/views"
+	"github.com/larissavoigt/sugarparty/internal/middlewares/auth"
+	"github.com/larissavoigt/sugarparty/internal/views"
 )
 
 var tpl = views.New("templates/admin")
