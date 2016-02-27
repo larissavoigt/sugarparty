@@ -1,21 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    {{template "head"}}
     <title>Login - Admin - Festa do Açúcar</title>
   </head>
   <body>
-    <h1>Admin Login</h1>
-    {{if .}}
-      <h3>{{.}}</h3>
-    {{end}}
-    <form action="/admin/login" method="post">
-      <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" />
+    <div class="row">
+      <div class="col-md-4 col-md-offset-4">
+        <h1>Admin Login</h1>
+        {{if .}}
+        <p class="bg-danger">{{.}}</p>
+        {{end}}
+        <form action="/admin/login" class="form-inline" method="post">
+            <div class="form-group">
+              <label class="sr-only" for="password">Password</label>
+              <input type="password" name="password" class="form-control" placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+          </form>
       </div>
-      <input type="submit" value="Login" />
-    </form>
+    </div>
   </body>
 </html>
