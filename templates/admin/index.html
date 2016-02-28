@@ -1,25 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    {{template "head"}}
     <title>Admin - Festa do Açúcar</title>
   </head>
   <body>
-    <h1>Admin</h1>
-    <ul>
-      <li>
-        <a href="/admin/orders">Pedidos</a>
-      </li>
-      <li>
-        <a href="/admin/categories">Categorias</a>
-      </li>
-      <li>
-        <a href="/admin/products">Produtos</a>
-      </li>
-      <li>
-        <a href="/admin/logout">Logout</a>
-      </li>
-    </ul>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <h1>Admin</h1>
+          <div class="list-group">
+            <a href="/admin/orders" class="list-group-item active">Pedidos</a>
+            <a href="/admin/categories" class="list-group-item">Categorias</a>
+            <a href="/admin/products" class="list-group-item">Produtos</a>
+            <a href="/admin/logout" class="list-group-item">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
