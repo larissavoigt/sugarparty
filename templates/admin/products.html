@@ -1,40 +1,41 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    {{template "head"}}
     <title>Produtos - Admin - Festa do Açúcar</title>
   </head>
   <body>
-    <h1>Admin Produtos</h1>
-    {{ if . }}
-    <table>
-      <thead>
-        <tr>
-          <th>Categoria</th>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Preço</th>
-          <th>Ativo</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{ range . }}
+    <div class="container-fluid">
+      <h1>Admin Produtos</h1>
+      {{ if . }}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Preço</th>
+            <th>Ativo</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range . }}
           <tr>
             <td>{{.Category.Name}}</td>
             <td>{{.Name}}</td>
             <td>{{.Description}}</td>
             <td>R$ {{.Price | printf "%.2f" }}</td>
             <td>{{if .Active}}&#x2713;{{end}}</td>
-            <td><a href="/admin/products/{{.ID}}">Editar</a></td>
+            <td><a href="/admin/products/{{.ID}}" class="btn btn-primary">Editar</a></td>
           </tr>
-        {{ end }}
-      </tbody>
-    </table>
-    {{ else }}
+          {{ end }}
+        </tbody>
+      </table>
+      {{ else }}
       <p>Nenhum produto encontrado</p>
-    {{ end }}
-    <a href="/admin/products/new">Novo Produto</a>
+      {{ end }}
+      <a href="/admin/products/new" class="btn btn-primary">Novo Produto</a>
+    </div>
   </body>
 </html>
