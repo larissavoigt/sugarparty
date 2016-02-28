@@ -8,6 +8,7 @@ import (
 )
 
 var tpl = views.New("templates/admin")
+var layout = views.Layout("templates/admin", "layout")
 
 func NewServeMux() *http.ServeMux {
 	mux := http.NewServeMux()
@@ -43,7 +44,7 @@ func logout(w http.ResponseWriter, r *http.Request) {
 func index(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/admin/" {
 		if auth.Logged(r) {
-			tpl.Render(w, "index", nil)
+			http.Redirect(w, r, "/admin/orders", http.StatusFound)
 		} else {
 			http.Redirect(w, r, "/admin/login", http.StatusFound)
 		}

@@ -39,7 +39,7 @@ func listProducts(w http.ResponseWriter) {
 	if err != nil {
 		views.Error(w, err)
 	} else {
-		tpl.Render(w, "products", products)
+		layout.Yield(w, "products", products)
 	}
 }
 

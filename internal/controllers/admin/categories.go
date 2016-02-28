@@ -22,7 +22,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				views.Error(w, err)
 			} else {
-				tpl.Render(w, "categories", categories)
+				layout.Yield(w, "orders", categories)
 			}
 		case "new":
 			tpl.Render(w, "category", nil)

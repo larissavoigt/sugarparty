@@ -1,37 +1,29 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Pedidos - Admin - Festa do Açúcar</title>
-  </head>
-  <body>
-    <h1>Admin Pedidos</h1>
-    {{ if . }}
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Status</th>
-          <th>Enviado</th>
-          <th>Atualizado</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{ range . }}
-          <tr>
-            <td>{{.Name}}</td>
-            <td>{{.StatusName}}</td>
-            <td>{{.CreatedAt.Local.Format "Jan 2, 3:04pm"}}</td>
-            <td>{{.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</td>
-            <td><a href="/admin/orders/{{.ID}}">ver</a></td>
-          </tr>
-        {{ end }}
-      </tbody>
-    </table>
-    {{ else }}
-      <p>Nenhum pedido encontrado</p>
+{{ define "main" }}
+<h1>Admin Pedidos</h1>
+{{ if . }}
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Status</th>
+      <th>Enviado</th>
+      <th>Atualizado</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    {{ range . }}
+    <tr>
+      <td>{{.Name}}</td>
+      <td>{{.StatusName}}</td>
+      <td>{{.CreatedAt.Local.Format "Jan 2, 3:04pm"}}</td>
+      <td>{{.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</td>
+      <td><a href="/admin/orders/{{.ID}}">ver</a></td>
+    </tr>
     {{ end }}
-  </body>
-</html>
+  </tbody>
+</table>
+{{ else }}
+<p>Nenhum pedido encontrado</p>
+{{ end }}
+{{ end }}
