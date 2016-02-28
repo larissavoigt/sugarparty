@@ -1,31 +1,40 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    {{template "head"}}
     <title>Categoria - Admin - Festa do Açúcar</title>
   </head>
   <body>
-    {{ if .ID }}
-      <h1>{{.Name}}</h1>
-    {{ else }}
-      <h1>Nova Categoria</h1>
-    {{ end }}
-    <form action="/admin/categories/{{.ID}}" method="post">
-      <input type="hidden" name="id" value="{{.ID}}" />
-      <div>
-        <label for="name">Nome</label>
-        <input type="text" name="name" value="{{.Name}}" required />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          {{ if .ID }}
+          <h1>{{.Name}}</h1>
+          {{ else }}
+          <h1>Nova Categoria</h1>
+          {{ end }}
+          <form action="/admin/categories/{{.ID}}" method="post">
+            <div class="form-group">
+              <input type="hidden" name="id" value="{{.ID}}" />
+            </div>
+            <div class="form-group">
+              <label for="name">Nome</label>
+              <input type="text" class="form-control" name="name" value="{{.Name}}" required />
+            </div>
+            <div class="form-group">
+              <label for="description">Descrição</label>
+              <textarea class="form-control" name="description" rows="8" cols="40">{{.Description}}</textarea>
+            </div>
+            <div class="form-group">
+              {{ if .ID }}
+              <button type="submit" class="btn btn-primary">Alterar</button>
+              {{ else }}
+              <button type="submit" class="btn btn-primary">Adicionar</button>
+              {{ end }}
+            </div>
+        </div>
       </div>
-      <div>
-        <label for="description">Descrição</label>
-        <textarea name="description" rows="8" cols="40">{{.Description}}</textarea>
-      </div>
-      {{ if .ID }}
-        <input type="submit" value="Alterar" />
-      {{ else }}
-        <input type="submit" value="Adicionar" />
-      {{ end }}
+    </div>
     </form>
   </body>
 </html>
