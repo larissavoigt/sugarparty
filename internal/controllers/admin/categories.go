@@ -25,7 +25,7 @@ func categories(w http.ResponseWriter, r *http.Request) {
 				layout.Yield(w, "categories", categories)
 			}
 		case "new":
-			tpl.Render(w, "category", nil)
+			layout.Yield(w, "category", nil)
 		default:
 			c, err := category.Find(id)
 			if err != nil {
