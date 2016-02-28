@@ -1,37 +1,38 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
+    {{template "head"}}
     <title>Categorias - Admin - Festa do Açúcar</title>
   </head>
   <body>
-    <h1>Admin Categorias</h1>
-    {{ if . }}
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Descrição</th>
-          <th>Produtos</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {{ range . }}
+    <div class="container-fluid">
+      <h1>Admin Categorias</h1>
+      {{ if . }}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Descrição</th>
+            <th>Produtos</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range . }}
           <tr>
             <td>{{.Name}}</td>
             <td>{{.Description}}</td>
             <td>{{.Count}}</td>
             <td><a href="/admin/categories/{{.ID}}">Editar</a></td>
           </tr>
-        {{ end }}
-      </tbody>
-    </table>
-    {{ else }}
+          {{ end }}
+        </tbody>
+      </table>
+      {{ else }}
       <p>Nenhuma categoria encontrada</p>
-    {{ end }}
-    <a href="/admin/categories/new">Nova Categoria</a>
+      {{ end }}
+      <a href="/admin/categories/new" class="btn btn-primary">Nova Categoria</a>
+    </div>
   </body>
 </html>
 
