@@ -61,7 +61,7 @@ func showProduct(w http.ResponseWriter, id string) {
 		c,
 		p,
 	}
-	tpl.Render(w, "product", content)
+	layout.Yield(w, "product", content)
 }
 
 func newProduct(w http.ResponseWriter) {
@@ -77,7 +77,7 @@ func newProduct(w http.ResponseWriter) {
 		c,
 		&product.Product{},
 	}
-	tpl.Render(w, "product", content)
+	layout.Yield(w, "product", content)
 }
 
 func createProduct(w http.ResponseWriter, r *http.Request, id string) {

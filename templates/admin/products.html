@@ -22,7 +22,7 @@
       <td>{{.Description}}</td>
       <td>R$ {{.Price | printf "%.2f" }}</td>
       <td>{{if .Active}}&#x2713;{{end}}</td>
-      <td><a href="/admin/products/{{.ID}}" class="btn btn-primary">Editar</a></td>
+      <td><a href="/admin/products/{{.ID}}">Editar</a></td>
     </tr>
     {{ end }}
   </tbody>

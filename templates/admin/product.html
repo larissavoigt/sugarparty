@@ -1,49 +1,47 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Produto - Admin - Festa do Açúcar</title>
-  </head>
-  <body>
-    {{ $p := .Product }}
-    {{ if .Product.ID }}
-      <h1>{{.Product.Name}}</h1>
-    {{ else }}
-      <h1>Novo Produto</h1>
-    {{ end }}
-    <form action="/admin/products/{{.Product.ID}}" method="post">
-      <input type="hidden" name="id" value="{{.Product.ID}}" />
-      <div>
-        <label for="name">Nome</label>
-        <input type="text" name="name" value="{{.Product.Name}}" required />
-      </div>
-      <div>
-        <label for="description">Descrição</label>
-        <textarea name="description" rows="8" cols="40">{{.Product.Description}}</textarea>
-      </div>
-      <div>
-        <label for="name">Preço</label>
-        <input type="number" name="price" value="{{.Product.Price}}" step="0.01" required/>
-      </div>
-      <div>
-        <label>
-          <input type="checkbox" name="active" {{if .Product.Active}} checked {{end}} />
-          Ativo
-        </label>
-      </div>
-      <div>
-        <select name="category_id">
-          {{ range .Categories }}
-          <option value="{{.ID}}" {{ if eq .ID $p.Category.ID }}selected{{ end }}>{{.Name}}</option>
-          {{ end }}
-        </select>
-      </div>
-      {{ if .Product.ID }}
-        <input type="submit" value="Alterar" />
-      {{ else }}
-        <input type="submit" value="Adicionar" />
+{{define "title"}}
+  {{ $p := .Product }}
+  {{ if .Product.ID }}
+    <h1>{{.Product.Name}}</h1>
+  {{ else }}
+    <h1>Novo Produto</h1>
+  {{ end }}
+{{ end }}
+
+{{ define "main"}}
+  {{ $p := .Product }}
+<form action="/admin/products/{{.Product.ID}}" method="post">
+  <div class="form-group">
+  <input type="hidden" name="id" value="{{.Product.ID}}" />
+  </div>
+  <div class="form-group">
+    <label for="name">Nome</label>
+    <input type="text" name="name" class="form-control" value="{{.Product.Name}}" required />
+  </div>
+  <div class="form-group">
+    <label for="description">Descrição</label>
+    <textarea name="description" class="form-control" rows="8" cols="40">{{.Product.Description}}</textarea>
+  </div>
+  <div class="form-group">
+    <label for="name">Preço</label>
+    <input type="number" name="price" class="form-control" value="{{.Product.Price}}" step="0.01" required/>
+  </div>
+  <div class="checkbox">
+    <label>
+      <input type="checkbox" name="active" class="checkbox-inline" {{if .Product.Active}} checked {{end}} />
+      Ativo
+    </label>
+  </div>
+  <div class="form-group">
+    <select name="category_id" class="form-control">
+      {{ range .Categories }}
+      <option value="{{.ID}}" {{ if eq .ID $p.Category.ID }}selected{{ end }}>{{.Name}}</option>
       {{ end }}
-    </form>
-  </body>
-</html>
+    </select>
+  </div>
+  {{ if .Product.ID }}
+  <button input type="submit" class="btn btn-primary">Alterar</button>
+  {{ else }}
+  <button input type="submit" class="btn btn-primary">Adicionar</button>
+  {{ end }}
+</form>
+{{ end }}
