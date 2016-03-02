@@ -55,7 +55,7 @@ func showOrder(w http.ResponseWriter, id string) {
 	if err != nil {
 		views.Error(w, err)
 	} else {
-		tpl.Render(w, "order", content)
+		layout.Yield(w, "order", content)
 	}
 }
 

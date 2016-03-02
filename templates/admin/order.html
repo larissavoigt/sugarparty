@@ -1,12 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width">
-    <title>Pedido - Admin - Festa do Açúcar</title>
-  </head>
-  <body>
+    {{define "title"}}
     <h1>Admin Pedido</h1>
+    {{end}}
+    {{define "main"}}
     <dl>
       <dt>Nome</dt>
       <dd>{{.Order.Name}}</dd>
@@ -31,8 +26,8 @@
 
       <dt>Atualizado</dt>
       <dd>{{.Order.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
-    </dd>
-    <table>
+    </dl>
+    <table class="table table-striped">
       <thead>
         <tr>
           <th>Produto</th>
@@ -64,5 +59,4 @@
       </div>
       <input type="submit" value="Alterar" />
     </form>
-  </body>
-</html>
+    {{ end }}
