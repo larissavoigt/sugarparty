@@ -5,7 +5,6 @@
     <div class="row">
       <div class="col-md-6">
         <dl>
-
           <dt>Nome</dt>
           <dd>{{.Order.Name}}</dd>
 
@@ -19,13 +18,11 @@
           <dd>
             {{.Order.Message}}
           </dd>
-
         </dl>
       </div>
 
       <div class="col-md-6">
         <dl>
-
           <dt>Status</dt>
           <dd>{{.Order.StatusName}}</dd>
 
@@ -37,7 +34,6 @@
 
           <dt>Atualizado</dt>
           <dd>{{.Order.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
-
         </dl>
       </div>
     </div>
@@ -62,9 +58,9 @@
       </tbody>
     </table>
 
-    <form action="/admin/orders/{{.Order.ID}}" method="post">
+    <form action="/admin/orders/{{.Order.ID}}" method="post" class="form-inline">
+      <label for="status">Mudar Status</label>
       <div class="form-group">
-        <label for="status">Mudar Status</label>
         <select name="status" class="form-control">
           {{ $o := .Order }}
           {{ range $i, $s := .StatusNames }}
@@ -72,6 +68,6 @@
           {{ end }}
         </select>
       </div>
-      <button input type="submit" class="btn btn-primary">Alterar</button>
+      <button type="submit" class="btn btn-primary">Alterar</button>
     </form>
     {{ end }}
