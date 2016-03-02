@@ -100,7 +100,7 @@ func (c *Cart) Destroy(w http.ResponseWriter) {
 func (c *Cart) Total() float64 {
 	var t float64
 	for _, i := range c.Items {
-		t += i.Product.Price
+		t += i.Product.Price * float64(i.Quantity)
 	}
 	return t
 }
