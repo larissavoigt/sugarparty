@@ -36,10 +36,17 @@ func orders(w http.ResponseWriter, r *http.Request) {
 
 func listOrders(w http.ResponseWriter) {
 	orders, err := order.All()
+	content := struct {
+		Orders []order.Order
+		Page   string
+	}{
+		orders,
+		"orders",
+	}
 	if err != nil {
 		views.Error(w, err)
 	} else {
-		layout.Yield(w, "orders", orders)
+		layout.Yield(w, "orders", content)
 	}
 }
 
@@ -48,9 +55,11 @@ func showOrder(w http.ResponseWriter, id string) {
 	content := struct {
 		Order       *order.Order
 		StatusNames []string
+		Page        string
 	}{
 		o,
 		order.StatusNames,
+		"orders",
 	}
 	if err != nil {
 		views.Error(w, err)

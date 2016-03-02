@@ -2,7 +2,7 @@
 <h1>Admin Categorias</h1>
 {{end}}
 {{ define "main" }}
-{{ if . }}
+{{ if .Categories }}
 <table class="table table-striped">
   <thead>
     <tr>
@@ -13,7 +13,7 @@
     </tr>
   </thead>
   <tbody>
-    {{ range . }}
+    {{ range .Categories }}
     <tr>
       <td>{{.Name}}</td>
       <td>{{.Description}}</td>

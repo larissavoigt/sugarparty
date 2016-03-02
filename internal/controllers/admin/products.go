@@ -39,7 +39,14 @@ func listProducts(w http.ResponseWriter) {
 	if err != nil {
 		views.Error(w, err)
 	} else {
-		layout.Yield(w, "products", products)
+		content := struct {
+			Products []product.Product
+			Page     string
+		}{
+			products,
+			"products",
+		}
+		layout.Yield(w, "products", content)
 	}
 }
 
@@ -57,9 +64,11 @@ func showProduct(w http.ResponseWriter, id string) {
 	content := struct {
 		Categories []category.Category
 		Product    *product.Product
+		Page       string
 	}{
 		c,
 		p,
+		"products",
 	}
 	layout.Yield(w, "product", content)
 }
@@ -73,9 +82,11 @@ func newProduct(w http.ResponseWriter) {
 	content := struct {
 		Categories []category.Category
 		Product    *product.Product
+		Page       string
 	}{
 		c,
 		&product.Product{},
+		"products",
 	}
 	layout.Yield(w, "product", content)
 }

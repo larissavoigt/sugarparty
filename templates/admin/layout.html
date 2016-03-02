@@ -23,9 +23,9 @@
       <div class="row">
         <div class="col-md-2">
           <div class="list-group">
-            <a href="/admin/orders" class="list-group-item active">Pedidos</a>
-            <a href="/admin/categories" class="list-group-item">Categorias</a>
-            <a href="/admin/products" class="list-group-item">Produtos</a>
+            <a href="/admin/orders" class="list-group-item {{if eq .Page "orders"}}active{{end}}">Pedidos</a>
+            <a href="/admin/categories" class="list-group-item {{if eq .Page "categories"}}active{{end}}">Categorias</a>
+            <a href="/admin/products" class="list-group-item {{if eq .Page "products"}}active{{end}}">Produtos</a>
             <a href="/admin/logout" class="list-group-item">Logout</a>
           </div>
         </div>

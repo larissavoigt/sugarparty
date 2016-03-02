@@ -22,16 +22,34 @@ func categories(w http.ResponseWriter, r *http.Request) {
 			if err != nil {
 				views.Error(w, err)
 			} else {
-				layout.Yield(w, "categories", categories)
+				content := struct {
+					Categories []category.Category
+					Page       string
+				}{
+					categories,
+					"categories",
+				}
+				layout.Yield(w, "categories", content)
 			}
 		case "new":
-			layout.Yield(w, "category", nil)
+			content := struct {
+				Page     string
+				Category category.Category
+			}{Page: "categories"}
+			layout.Yield(w, "category", content)
 		default:
 			c, err := category.Find(id)
 			if err != nil {
 				views.Error(w, err)
 			} else {
-				tpl.Render(w, "category", c)
+				content := struct {
+					Category *category.Category
+					Page     string
+				}{
+					c,
+					"categories",
+				}
+				layout.Yield(w, "category", content)
 			}
 		}
 	case "POST":
