@@ -2,7 +2,7 @@
     <h1>Admin Pedido</h1>
     {{end}}
     {{define "main"}}
-    <dl>
+    <dl class="dl-horizontal">
       <dt>Nome</dt>
       <dd>{{.Order.Name}}</dd>
 
@@ -48,15 +48,15 @@
     </table>
 
     <form action="/admin/orders/{{.Order.ID}}" method="post">
-      <div>
+      <div class="form-group">
         <label for="status">Mudar Status</label>
-        <select name="status">
+        <select name="status" class="form-control">
           {{ $o := .Order }}
           {{ range $i, $s := .StatusNames }}
           <option value="{{$i}}" {{ if eq $i $o.Status }}selected{{ end }}>{{$s}}</option>
           {{ end }}
         </select>
       </div>
-      <input type="submit" value="Alterar" />
+      <button input type="submit" class="btn btn-primary">Alterar</button>
     </form>
     {{ end }}
