@@ -6,3 +6,6 @@ p.bg-danger {
   padding: 15px;
 }
 
+dl dd {
+  margin-bottom: 5px;
+}

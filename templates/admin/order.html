@@ -2,31 +2,46 @@
     <h1>Admin Pedido</h1>
     {{end}}
     {{define "main"}}
-    <dl class="dl-horizontal">
-      <dt>Nome</dt>
-      <dd>{{.Order.Name}}</dd>
+    <div class="row">
+      <div class="col-md-6">
+        <dl>
 
-      <dt>Email</dt>
-      <dd>{{.Order.Email}}</dd>
+          <dt>Nome</dt>
+          <dd>{{.Order.Name}}</dd>
 
-      <dt>Telefone</dt>
-      <dd>{{.Order.Phone}}</dd>
+          <dt>Email</dt>
+          <dd>{{.Order.Email}}</dd>
 
-      <dt>Mensagem</dt>
-      <dd>{{.Order.Message}}</dd>
+          <dt>Telefone</dt>
+          <dd>{{.Order.Phone}}</dd>
 
-      <dt>Status</dt>
-      <dd>{{.Order.StatusName}}</dd>
+          <dt>Mensagem</dt>
+          <dd>
+            {{.Order.Message}}
+          </dd>
 
-      <dt>Valor</dt>
-      <dd>R$ {{.Order.Price | printf "%.2f" }}</dd>
+        </dl>
+      </div>
 
-      <dt>Enviado</dt>
-      <dd>{{.Order.CreatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
+      <div class="col-md-6">
+        <dl>
 
-      <dt>Atualizado</dt>
-      <dd>{{.Order.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
-    </dl>
+          <dt>Status</dt>
+          <dd>{{.Order.StatusName}}</dd>
+
+          <dt>Valor</dt>
+          <dd>R$ {{.Order.Price | printf "%.2f" }}</dd>
+
+          <dt>Enviado</dt>
+          <dd>{{.Order.CreatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
+
+          <dt>Atualizado</dt>
+          <dd>{{.Order.UpdatedAt.Local.Format "Jan 2, 3:04pm"}}</dd>
+
+        </dl>
+      </div>
+    </div>
+
     <table class="table table-striped">
       <thead>
         <tr>
